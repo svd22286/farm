@@ -29,18 +29,15 @@ class Farm extends Command
      * Add animals
      *
      * @param FarmService $service
-     * @param int $cows
-     * @param int $chickens
+     * @ param array<int,array<string,int>> $animals Describes animal types & count to be added
      */
-    private function addAnimals(FarmService $service, int $cows, int $chickens): void
+    private function addAnimals(FarmService $service, array $animals): void
     {
-        while ($cows--) {
-            $service->addAnimal(AnimalType::COW->value);
-        }
-
-        while ($chickens--) {
-            $service->addAnimal(AnimalType::CHICKEN->value);
-        }
+        array_walk($animals, function ($item, $key) use ($service) {
+            while ($item[1]--) {
+                $service->addAnimal($item[0]);
+            }
+        });
     }
 
     /**
@@ -99,7 +96,10 @@ class Farm extends Command
     public function handle(FarmService $service)
     {
         // step 1
-        $this->addAnimals($service, 10, 20);
+        $this->addAnimals($service, [
+            [(string)AnimalType::COW->value, 10],
+            [(string)AnimalType::CHICKEN->value, 20]
+        ]);
 
         // step 2
         $animalsInfo = $service->getCountAnimalsByType();
@@ -113,7 +113,10 @@ class Farm extends Command
         $this->report($productsInfo, 'Продукция собранная за первую неделю');
 
         // step 5
-        $this->addAnimals($service, 1, 5);
+        $this->addAnimals($service, [
+            [AnimalType::COW->value, 1],
+            [AnimalType::CHICKEN->value, 5]
+        ]);
 
         // step 6
         $animalsInfo = $service->getCountAnimalsByType();
