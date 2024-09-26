@@ -29,7 +29,7 @@ class Farm extends Command
      * Add animals
      *
      * @param FarmService $service
-     * @ param array<int,array<string,int>> $animals Describes animal types & count to be added
+     * @param array<int,array<string,int>> $animals Describes animal types & count to be added
      */
     private function addAnimals(FarmService $service, array $animals): void
     {
@@ -86,7 +86,7 @@ class Farm extends Command
             return $carry . $str;
         }, "");
         $this->line("<bg=black;fg=green>" . $line . "</>");
-        $this->line("<bg=white;fg=red>" . str_repeat("-",60) . "</>");
+        $this->line("<bg=white;fg=red>" . str_repeat("-",30 * count($keys)) . "</>");
         $this->line(" ");
     }
 
