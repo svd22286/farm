@@ -126,5 +126,15 @@ class Farm extends Command
         $this->harve($service);
         $productsInfo = $service->getCountProductsByType();
         $this->report($productsInfo, 'Собрано продуктов за вторую неделю');
+
+        // adding 3 goats & harvesting 5 times of goat milk
+        $this->addAnimals($service, [
+            [AnimalType::GOAT->value, 3],
+        ]);
+        $animalsInfo = $service->getCountAnimalsByType();
+        $this->report($animalsInfo, 'Количество животных после второго похода на рынок');
+        $this->harve($service);
+        $productsInfo = $service->getCountProductsByType(5);
+        $this->report($productsInfo, 'Собрано продуктов за 5 дней третьей недели');
     }
 }
