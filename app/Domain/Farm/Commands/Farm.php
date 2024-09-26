@@ -96,33 +96,27 @@ class Farm extends Command
     public function handle(FarmService $service)
     {
         // step 1
-        $this->addAnimals($service, [
-            [(string)AnimalType::COW->value, 10],
-            [(string)AnimalType::CHICKEN->value, 20]
-        ]);
-
-        // step 2
         $animalsInfo = $service->getCountAnimalsByType();
         $this->report($animalsInfo, 'Число животных на ферме');
 
-        // step 3
+        // step 2
         $this->harve($service);
 
-        // step 4
+        // step 3
         $productsInfo = $service->getCountProductsByType();
         $this->report($productsInfo, 'Продукция собранная за первую неделю');
 
-        // step 5
+        // step 4
         $this->addAnimals($service, [
             [AnimalType::COW->value, 1],
             [AnimalType::CHICKEN->value, 5]
         ]);
 
-        // step 6
+        // step 5
         $animalsInfo = $service->getCountAnimalsByType();
         $this->report($animalsInfo, 'Количество животных после похода на рынок');
 
-        // step 7
+        // step 6
         $this->harve($service);
         $productsInfo = $service->getCountProductsByType();
         $this->report($productsInfo, 'Собрано продуктов за вторую неделю');
