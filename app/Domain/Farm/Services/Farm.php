@@ -70,7 +70,7 @@ class Farm
                 }
                 $animal->makeHarvest();
                 $c = $animal->giveAwayHarvest();
-                $this->harvest[$productType][self::$day][] = $c;
+                $this->harvest[$productType][self::$day][$animal->getUuid()] = $c;
             }
         }
         self::$day++;
