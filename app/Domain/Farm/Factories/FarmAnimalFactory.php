@@ -5,6 +5,7 @@ use App\Domain\Farm\Contracts\AnimalFactory;
 use App\Domain\Farm\Enums\AnimalType;
 use App\Domain\Farm\Factories\CowFactory;
 use App\Domain\Farm\Factories\ChickenFactory;
+use App\Domain\Farm\Factories\GoalFactory;
 
 /**
  * Class FarmAnimalFactory
@@ -26,6 +27,7 @@ abstract class FarmAnimalFactory
         $factory = match ($animalType) {
             AnimalType::COW->value => new CowFactory(),
             AnimalType::CHICKEN->value => new ChickenFactory(),
+            AnimalType::GOAT->value => new GoatFactory(),
             default => throw new \Exception('Unsupported animal'),
         };
 
