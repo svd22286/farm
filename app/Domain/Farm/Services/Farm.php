@@ -138,9 +138,8 @@ class Farm
                 if ($key < $period) {
                     $key++;
                     return $carry + array_sum($harvest);
-                } else {
-                    return $carry;
                 }
+                return $carry;
             });
         }
         return $productsCountByType;
