@@ -4,6 +4,7 @@ namespace App\Domain\Farm\Commands;
 use App\Domain\Farm\Services\Farm as FarmService;
 use Illuminate\Console\Command;
 use App\Domain\Farm\Enums\AnimalType;
+use App\Domain\Farm\Services\Statistic as StatisticService;
 
 /**
  * Class Farm
@@ -93,42 +94,42 @@ class Farm extends Command
     /**
      * Execute the console command.
      */
-    public function handle(FarmService $service)
+    public function handle(FarmService $farmService, StatisticService $statisticService)
     {
         // step 1
-        $animalsInfo = $service->getCountAnimalsByType();
+        $animalsInfo = $statisticService->getCountAnimalsByType();
         $this->report($animalsInfo, 'Число животных на ферме');
 
         // step 2
-        $this->harve($service);
+        $this->harve($farmService);
 
         // step 3
-        $productsInfo = $service->getCountProductsByType();
+        $productsInfo = $statisticService->getCountProductsByType();
         $this->report($productsInfo, 'Продукция собранная за первую неделю');
 
         // step 4
-        $this->addAnimals($service, [
+        $this->addAnimals($farmService, [
             [AnimalType::COW->value, 1],
             [AnimalType::CHICKEN->value, 5]
         ]);
 
         // step 5
-        $animalsInfo = $service->getCountAnimalsByType();
+        $animalsInfo = $statisticService->getCountAnimalsByType();
         $this->report($animalsInfo, 'Количество животных после похода на рынок');
 
         // step 6
-        $this->harve($service);
-        $productsInfo = $service->getCountProductsByType();
+        $this->harve($farmService);
+        $productsInfo = $statisticService->getCountProductsByType();
         $this->report($productsInfo, 'Собрано продуктов за вторую неделю');
 
         // adding 3 goats & harvesting 5 times of goat milk
-        $this->addAnimals($service, [
+        $this->addAnimals($farmService, [
             [AnimalType::GOAT->value, 3],
         ]);
-        $animalsInfo = $service->getCountAnimalsByType();
+        $animalsInfo = $statisticService->getCountAnimalsByType();
         $this->report($animalsInfo, 'Количество животных после второго похода на рынок');
-        $this->harve($service);
-        $productsInfo = $service->getCountProductsByType(5);
+        $this->harve($farmService);
+        $productsInfo = $statisticService->getCountProductsByType(5);
         $this->report($productsInfo, 'Собрано продуктов за 5 дней третьей недели');
     }
 }
