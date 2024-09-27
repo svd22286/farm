@@ -1,6 +1,8 @@
 <?php
 namespace App\Domain\Farm\Services;
 
+use mysql_xdevapi\Collection;
+
 class Statistic
 {
     public function __construct(protected Farm $farmService)
@@ -48,5 +50,29 @@ class Statistic
             });
         }
         return $productsCountByType;
+    }
+
+    /**
+     * @return array<string, array<string, int>?
+     */
+    public function getCountProductsByAnimal()
+    {
+        $harvest = $this->farmService->getHarvest();
+        $productsByAnimal = [];
+        foreach ($harvest as $productType => $hrv) {
+            if (!isset($productsByAnimal[$productType])) {
+                $productsByAnimal[$productType] = [];
+            }
+            collect($hrv)->each(function ($productsArr, $key) use (&$productsByAnimal, $productType) {
+                $productsArr = collect($productsArr)->each(function ($productsCount, $uuid) use (&$productsByAnimal, $productType){
+                    if (!isset($productsByAnimal[$productType][$uuid])) {
+                        $productsByAnimal[$productType][$uuid] = $productsCount;
+                    } else {
+                        $productsByAnimal[$productType][$uuid] += $productsCount;
+                    }
+                });
+            });
+        }
+        return $productsByAnimal;
     }
 }

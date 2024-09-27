@@ -91,6 +91,36 @@ class Farm extends Command
         $this->line(" ");
     }
 
+    private function reportTable($arr, $title = '')
+    {
+        $keys = array_keys($arr);
+        $values = array_values($arr);
+
+        $keys = array_map(function ($val) {
+            $val .= ':';
+            return strtoupper(str_pad($val, 30, " "));
+        }, $keys);
+
+        if ($title) {
+            $title = str_pad($title, 60, ' ');
+            $this->info($title);
+        }
+
+        $values = collect($values);
+        $counter = 0;
+        $values->each(function ($vvalues, $key) use (&$counter, $keys) {
+            $this->line("<bg=black;fg=red>" . strtoupper(str_pad($keys[$counter], 30, " ")) . "</>");
+            ++$counter;
+            $vvalues = collect($vvalues);
+            $vvalues->each(function ($count, $uuid) {
+                $uuid = mb_substr($uuid, 0, 13);
+                $str = "<bg=black;fg=green>" . str_pad($uuid, 5, " ") . ' -> ' . $count . "</>";
+                $this->line("<bg=black;fg=green>" . $str . "</>");
+            });
+            $this->line("<bg=black;fg=green>" . str_repeat('-', 30) . "</>");
+        });
+    }
+
     /**
      * Execute the console command.
      */
@@ -128,8 +158,12 @@ class Farm extends Command
         ]);
         $animalsInfo = $statisticService->getCountAnimalsByType();
         $this->report($animalsInfo, 'Количество животных после второго похода на рынок');
-        $this->harve($farmService);
+        $this->harve($farmService, 5);
         $productsInfo = $statisticService->getCountProductsByType(5);
+
         $this->report($productsInfo, 'Собрано продуктов за 5 дней третьей недели');
+
+        $productsByAnimalInfo = $statisticService->getCountProductsByAnimal();
+        $this->reportTable($productsByAnimalInfo, 'Сбор продукции по животным');
     }
 }
